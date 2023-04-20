@@ -1,6 +1,6 @@
 // TODO: Include packages needed for this application
 const inquirer = require("inquirer");
-const util = require("util");
+// const util = require("util");
 const fs = require("fs");
 const generateMarkdown = require("./utils/generateMarkdown");
 //here we are trying to create the questions for user input 
@@ -13,6 +13,7 @@ const questions = [
         message: "what is the title of your project?",
         //here we are using validate because we want to make sure the user adds something
         
+        
     },
     //creating a question for the description 
     {
@@ -21,6 +22,7 @@ const questions = [
         message: "Please enter a description of your project",
         
     },
+
     //creating a question on how to install
     {
         type: "input",
@@ -41,7 +43,7 @@ const questions = [
         name: "license",
         message: "Please select a license for this project.",
         choices: [
-            "GNU AGPLv3",
+           "GNU AGPLv3",
             "GNU GPLv3",
             "GNU LGPLv3",
             "Apache 2.0",
@@ -57,12 +59,14 @@ const questions = [
         name: "tests",
         message: "Please enter any testing instructions you would like to provide for this project.",
         
+        
     },
     //creating questjions for the section in github
     {
         type: "input",
         name: "userName",
         message: "What is your GitHub username?",
+        
         
     },
   
