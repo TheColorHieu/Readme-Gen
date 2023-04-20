@@ -12,29 +12,29 @@ const questions = [
         name: "title",
         message: "what is the title of your project?",
         //here we are using validate because we want to make sure the user adds something
-        validate: validateInput,
+        
     },
     //creating a question for the description 
     {
         type: "input",
         name: "description",
         message: "Please enter a description of your project",
-        validate: validateInput,
+        
     },
     //creating a question on how to install
     {
         type: "input",
         name: "installation",
         message: "Please enter an explanation on how to install the software",
-       validate: validateInput,
-    }
+      
+    },
     //creating how we can use this 
     {
         type: "input",
         name: "usage",
         message: "describe how we can use this program",
-        validate: validateInput,
-    }
+       
+    },
    //creating options for our license 
    {
         type: "list",
@@ -49,38 +49,44 @@ const questions = [
             "MIT",
             "Mozilla",
         ],
-        validate: validateInput,
+       
     },
     //creating questions for tests
     {
         type: "input",
         name: "tests",
         message: "Please enter any testing instructions you would like to provide for this project.",
-        validate: validateInput,
+        
     },
     //creating questjions for the section in github
     {
         type: "input",
         name: "userName",
         message: "What is your GitHub username?",
-        validate: validateInput,
+        
     },
   
 ];
 
 // TODO: Create a function to write README file
-function writeToFile(fileName, data) {
-  fs.writeFile(fileName, generateMarkdown(data), function (err){
-    if (err) {
-        return console.log(err);
-    }
-  });
+
+const writeFileAsync = util.promisify(fs.writeFile);
+//we are using async/await syntax so that it will wait to be britten before loggin the success message
+async function writeToFile(fileName, data) {
+  try {
+    await writeFileAsync(fileName, generateMarkdown(data));
+    console.log("Success! You have created your Readme !");
+  } catch (err) {
+    console.log(err);
+  }
 }
+
 
 // TODO: Create a function to initialize app
 function init() {
-    inquirer.createPromptModule(questions).then((data) =>{ 
+    inquirer.prompt(questions).then((data) => { 
     console.log(JSON.stringify(data, null, " "));
+    //before we didnt identify the getLicense so take a look at line 71-80
     data.getLicense = getLicense(data.license);
     writeToFile("./example/README.md", data);
 });
