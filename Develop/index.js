@@ -1,81 +1,60 @@
-// TODO: Include packages needed for this application
+
 const inquirer = require("inquirer");
-// const util = require("util");
+const util = require("util");
 const fs = require("fs");
 const generateMarkdown = require("./utils/generateMarkdown");
-//here we are trying to create the questions for user input 
-// TODO: Create an array of questions for user input
-const questions = [
-    //creating a question for tittle 
-    {
-        type: "input",
-        name: "title",
-        message: "what is the title of your project?",
-        //here we are using validate because we want to make sure the user adds something
-        
-        
-    },
-    //creating a question for the description 
-    {
-        type: "input",
-        name: "description",
-        message: "Please enter a description of your project",
-        
-    },
 
-    //creating a question on how to install
-    {
-        type: "input",
-        name: "installation",
-        message: "Please enter an explanation on how to install the software",
-      
-    },
-    //creating how we can use this 
-    {
-        type: "input",
-        name: "usage",
-        message: "describe how we can use this program",
-       
-    },
-   //creating options for our license 
-   {
-        type: "list",
-        name: "license",
-        message: "Please select a license for this project.",
-        choices: [
-           "GNU AGPLv3",
-            "GNU GPLv3",
-            "GNU LGPLv3",
-            "Apache 2.0",
-            "Boost Software 1.0",
-            "MIT",
-            "Mozilla",
-        ],
-       
-    },
-    //creating questions for tests
-    {
-        type: "input",
-        name: "tests",
-        message: "Please enter any testing instructions you would like to provide for this project.",
-        
-        
-    },
-    //creating questjions for the section in github
-    {
-        type: "input",
-        name: "userName",
-        message: "What is your GitHub username?",
-        
-        
-    },
-  
+// Create an array of questions for user input
+const questions = [
+  {
+    type: "input",
+    name: "title",
+    message: "What is the title of your project?",
+  },
+  {
+    type: "input",
+    name: "description",
+    message: "Please enter a description of your project",
+  },
+  {
+    type: "input",
+    name: "installation",
+    message: "Please enter an explanation on how to install the software",
+  },
+  {
+    type: "input",
+    name: "usage",
+    message: "Describe how we can use this program",
+  },
+  {
+    type: "list",
+    name: "license",
+    message: "Please select a license for this project.",
+    choices: [
+      "GNU AGPLv3",
+      "GNU GPLv3",
+      "GNU LGPLv3",
+      "Apache 2.0",
+      "Boost Software 1.0",
+      "MIT",
+      "Mozilla",
+    ],
+  },
+  {
+    type: "input",
+    name: "tests",
+    message: "Please enter any testing instructions you would like to provide for this project.",
+  },
+  {
+    type: "input",
+    name: "userName",
+    message: "What is your GitHub username?",
+  },
 ];
 
-// TODO: Create a function to write README file
-
+// Create a function to write README file
 const writeFileAsync = util.promisify(fs.writeFile);
-//we are using async/await syntax so that it will wait to be britten before loggin the success message
+
 async function writeToFile(fileName, data) {
   try {
     await writeFileAsync(fileName, generateMarkdown(data));
@@ -85,16 +64,14 @@ async function writeToFile(fileName, data) {
   }
 }
 
-
-// TODO: Create a function to initialize app
+// Create a function to initialize app
 function init() {
-    inquirer.prompt(questions).then((data) => { 
-    console.log(JSON.stringify(data, null, " "));
-    //before we didnt identify the getLicense so take a look at line 71-80
-    data.getLicense = getLicense(data.license);
+  inquirer.prompt(questions).then((data) => {
+    data.getLicense = generateMarkdown.renderLicenseBadge(data.license);
     writeToFile("./example/README.md", data);
-});
+  });
 }
 
-// Function call to initialize app
+// Call the initialize function
 init();
+
