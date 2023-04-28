@@ -1,6 +1,5 @@
 
 const inquirer = require("inquirer");
-const util = require("util");
 const fs = require("fs");
 const generateMarkdown = require("./utils/generateMarkdown");
 
@@ -53,24 +52,41 @@ const questions = [
 ];
 
 // Create a function to write README file
-const writeFileAsync = util.promisify(fs.writeFile);
-
-async function writeToFile(fileName, data) {
-  try {
-    await writeFileAsync(fileName, generateMarkdown(data));
-    console.log("Success! You have created your Readme !");
-  } catch (err) {
-    console.log(err);
-  }
+function writeToFile(fileName, data) {
+  fs.writeFile(fileName, generateMarkdown(data), function (err) {
+    if (err) {
+      return console.log(err);
+    }
+  });
 }
 
 // Create a function to initialize app
+// function init() {
+//   inquirer.prompt(questions).then((data) => {
+//     data.getLicense = generateMarkdown.renderLicenseBadge(data.license);
+//     writeToFile("./example/README.md", data);
+//   });
+// }
+// Create a function to initialize app
+function getLicense(license) {
+  const licenseBadgeUrl = renderLicenseBadge(license);
+  const licenseLink = renderLicenseLink(license);
+  const licenseSection = renderLicenseSection(license);
+  
+  return { badge: licenseBadgeUrl, link: licenseLink, section: licenseSection };
+}
+
 function init() {
   inquirer.prompt(questions).then((data) => {
-    data.getLicense = generateMarkdown.renderLicenseBadge(data.license);
+    console.log(JSON.stringify(data, null, " "));
+    const { badge, link, section } = getLicense(data.license);
+    data.licenseBadge = badge;
+    data.licenseLink = link;
+    data.licenseSection = section;
     writeToFile("./example/README.md", data);
   });
 }
+
 
 // Call the initialize function
 init();
