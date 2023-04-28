@@ -51,43 +51,21 @@ const questions = [
   },
 ];
 
-// Create a function to write README file
+// TODO: Create a function to write README file
 function writeToFile(fileName, data) {
-  fs.writeFile(fileName, generateMarkdown(data), function (err) {
-    if (err) {
-      return console.log(err);
-    }
-  });
+  fs.writeFile(fileName, data, (err) =>
+  err ? console.error(err) : console.log('File written successfully!')
+);
 }
 
-// Create a function to initialize app
-// function init() {
-//   inquirer.prompt(questions).then((data) => {
-//     data.getLicense = generateMarkdown.renderLicenseBadge(data.license);
-//     writeToFile("./example/README.md", data);
-//   });
-// }
-// Create a function to initialize app
-function getLicense(license) {
-  const licenseBadgeUrl = renderLicenseBadge(license);
-  const licenseLink = renderLicenseLink(license);
-  const licenseSection = renderLicenseSection(license);
-  
-  return { badge: licenseBadgeUrl, link: licenseLink, section: licenseSection };
-}
-
+// TODO: Create a function to initialize app
 function init() {
-  inquirer.prompt(questions).then((data) => {
-    console.log(JSON.stringify(data, null, " "));
-    const { badge, link, section } = getLicense(data.license);
-    data.licenseBadge = badge;
-    data.licenseLink = link;
-    data.licenseSection = section;
-    writeToFile("./example/README.md", data);
-  });
+  inquirer.prompt(questions).then((answers)=>{
+      const markdownData = generateMarkdown(answers);
+      writeToFile('README.md', markdownData);
+  })
 }
 
-
-// Call the initialize function
+// Function call to initialize app
 init();
 
